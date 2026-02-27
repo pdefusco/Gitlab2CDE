@@ -23,15 +23,15 @@ Once you have signed up to a GitLab Account, log into through the main page.
 
 Select “Menu” -> “Projects” -> “Create New Project”
 
-In the project creation wizard, enter your project name and select “No Deployment Planned” under the “Project Deployment Target” dropdown. 
+In the project creation wizard, enter your project name and select “No Deployment Planned” under the “Project Deployment Target” dropdown.
 
-![alt text](img/project.png)
+![alt text](img/gitlab2cde_1.png)
 
 We will primarily work with GitLab CI, which you can find under the “CI/CD” tab on the left pane. GitLab CI allows you to declare GitLab jobs and pipelines through a file named “.gitlab-ci.yml”.
 
 To create the file, click on “CI/CD”, then “Editor” and finally “Configure Pipeline” as shown below.
 
-![alt text](img/gitlab2cde_2.png)
+![alt text](img/project.png)
 
 GitLab automatically populates the file with some sample GitLab CI Jobs for you. Notice the “stages” declaration at line 16. Each stage represents a phase in your pipeline. Each entry below represents a GitLab CI Job with its name being declared in its first line. The set of all stages, or essentially all jobs in a “.gitlab-ci.yml” file, make up a GitLab CI pipeline.
 
