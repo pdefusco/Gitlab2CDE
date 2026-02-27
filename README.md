@@ -1,9 +1,9 @@
-# Multi Cloud/Hybrid Cloud CI/CD Pipelines with CDE, Spark and GitLab 
+# Multi Cloud/Hybrid Cloud CI/CD Pipelines with CDE, Spark and GitLab
 
 
 ## Summary
 
-This tutorial demonstrates how you can use GitLab in conjunction with the Cloudera Data Engineering Service to meet Multi-cloud and Hybrid-cloud use cases. 
+This tutorial demonstrates how you can use GitLab in conjunction with the Cloudera Data Engineering Service to meet Multi-cloud and Hybrid-cloud use cases.
 
 
 ## Prerequisites
@@ -17,7 +17,7 @@ To complete the tutorial, you will need the following:
 
 ## Execute and Monitor a Spark Job via the CDE API in GitLab CI
 
-### Step 1: Creating a GitLab project 
+### Step 1: Creating a GitLab project
 
 Once you have signed up to a GitLab Account, log into through the main page.
 
@@ -25,7 +25,7 @@ Select “Menu” -> “Projects” -> “Create New Project”
 
 In the project creation wizard, enter your project name and select “No Deployment Planned” under the “Project Deployment Target” dropdown. 
 
-![alt text](img/gitlab2cde_1.png)
+![alt text](img/project.png)
 
 We will primarily work with GitLab CI, which you can find under the “CI/CD” tab on the left pane. GitLab CI allows you to declare GitLab jobs and pipelines through a file named “.gitlab-ci.yml”.
 
@@ -37,7 +37,7 @@ GitLab automatically populates the file with some sample GitLab CI Jobs for you.
 
 The “script” section in each GitLab CI Job is where you can run your commands. These could be simple bash commands or more. In the next sections of this tutorial, we will issue CDE API commands against CDE Virtual Clusters by executing “curl” commands in the script section of each job. There are many more ways to work with GitLab CI Pipelines, including using a Docker container, Python, and a lot more. These are beyond the scope of this demo.
 
-Additionally, notice the “Commit Changes” button at the bottom of the screen. We will edit the “.gitlab-ci.yml” file through the editor and commit different versions as we make modifications to our pipeline. GitLab will log each version for us, and immediately run the pipeline at each commit. 
+Additionally, notice the “Commit Changes” button at the bottom of the screen. We will edit the “.gitlab-ci.yml” file through the editor and commit different versions as we make modifications to our pipeline. GitLab will log each version for us, and immediately run the pipeline at each commit.
 
 ![alt text](img/gitlab2cde_3.png)
 
@@ -49,7 +49,7 @@ Wait for the pipeline to run, then click on “View Pipeline” at the top right
 
 ![alt text](img/gitlab2cde_4.png)
 
-In the next screen, you can drill down into each GitLab CI Job. Click on “build-job” as shown below. 
+In the next screen, you can drill down into each GitLab CI Job. Click on “build-job” as shown below.
 
 ![alt text](img/gitlab2cde_5.png)
 
@@ -60,11 +60,11 @@ Finally, examine the output. Notice the bash commands were executed (‘echo “
 
 ### Step 2: Creating GitLab environment variables for CDE API use
 
-Now that you have a basic understanding of GitLab CI Jobs and Pipelines, you can move on to using this tool to interact with the CDE Service. 
+Now that you have a basic understanding of GitLab CI Jobs and Pipelines, you can move on to using this tool to interact with the CDE Service.
 
 Before you can go ahead and update our GitLab CI Pipeline you need to set environment variables. Environment variables allow you to store and reuse values such as URLs, Credentials, etc. as part of your GitLab CI Jobs.
 
-Navigate to the CDP Home Page and open the CDE Service. 
+Navigate to the CDP Home Page and open the CDE Service.
 
 ![alt text](img/gitlab2cde_7.png)
 
@@ -79,7 +79,7 @@ Copy the “JOBS API URL” to your clipboard as shown below. For now paste that
 Next, derive “CDE_SVC_URL” by modifying the “JOBS_API_URL” value as shown below. For now paste that in your editor. You will use this as variable 2.
 
 ```
-Sample JOBS API URL: 
+Sample JOBS API URL:
 https://abc6abc2.cde-wxwx1hjk.go02-dem.ylcu-atmi.cloudera.site/dex/api/v1
 
 Replace “abc6abc2” with “service” and every character to the right of “.site”
@@ -96,20 +96,20 @@ cdp_workload_user:cdp_workload_password
 
 If you’re not sure what your CDP Workload User and Password are, please contact your administrator or set these in the User Management Section of the CDP Management Console.
 
-Navigate back to your GitLab CI Project. Then access the Variables Section by clicking on “Settings” and “CI/CD” as shown below. 
+Navigate back to your GitLab CI Project. Then access the Variables Section by clicking on “Settings” and “CI/CD” as shown below.
 
 ![alt text](img/gitlab2cde_10.png)
 
-Expand the variables section and click on “Add Variable”. 
+Expand the variables section and click on “Add Variable”.
 
 ![alt text](img/gitlab2cde_11.png)
 
-Next, we will add three variables with the following values. When you’re done with each, click on “Add Variable” and then proceed to the next. 
+Next, we will add three variables with the following values. When you’re done with each, click on “Add Variable” and then proceed to the next.
 
 ![alt text](img/gitlab2cde_12.png)
 
 ```
-Variable 1 
+Variable 1
 Key: “CDE_JOB_URL”
 Value: paste the URL you copied from the CDE Virtual Cluster “JOBS API URL” tab.
 
@@ -122,11 +122,11 @@ Key: “CDE_CREDENTIALS”
 Value: paste the username:password key value pair you created earlier for CDE_CREDENTIALS
 ```
 
-Your Variables Section should look something like this when you’re done. 
+Your Variables Section should look something like this when you’re done.
 
 ![alt text](img/gitlab2cde_13.png)
 
-You are now ready to finally create a GitLab CI Pipeline leveraging the CDE API. 
+You are now ready to finally create a GitLab CI Pipeline leveraging the CDE API.
 
 
 ### Step 3: Creating GitLab environment variables for CDE API use
@@ -138,7 +138,7 @@ Navigate back to the Editor under the CI/CD tab on the left pane. Replace the co
 ```
 stages:          # List of stages for jobs, and their order of execution
  - deploy
- 
+
 create_cde_resource:
  stage: deploy
  image: docker:stable
@@ -150,17 +150,17 @@ create_cde_resource:
    - 'curl -H "Authorization: Bearer ${CDE_TOKEN}" -X POST "${CDE_JOB_URL}/resources" -H "Content-Type: application/json" -d "{ \"name\": \"gitlab2cde_resource_test\"}"'
 ```
 
-Let’s walk through the above in more detail. 
+Let’s walk through the above in more detail.
 
 * We only need one stage. We modified the stages section leaving only a “deploy” stage.
-* At line 6, we declared a docker image. This is provided by GitLab CI and does not need modification, but if you wanted to you could use a custom image. 
+* At line 6, we declared a docker image. This is provided by GitLab CI and does not need modification, but if you wanted to you could use a custom image.
 * At lines 7, 8, and 9 we use apk (Alpine Linux package manager) to download the required packages to send the request to the CDE Virtual Cluster
 * At line 11, we set the CDE Token leveraging the “CDE_CREDENTIALS” and “CDE_SVC_URL” environment variables. The token is necessary to authenticate the API request with the CDE Virtual Cluster.  
 * At line 12 we send the request to the CDE Virtual Cluster.
 
-Now you are ready to submit this pipeline. Enter a brief comment in the “Commit Message” section and then click on the “Commit Changes” button. 
+Now you are ready to submit this pipeline. Enter a brief comment in the “Commit Message” section and then click on the “Commit Changes” button.
 
-After a brief moment, the pipeline should have succeeded. As you did previously with the example file, click on “View Pipeline” at the top right. Then open the job and observe the output. In green, notice each bash command executed successfully. 
+After a brief moment, the pipeline should have succeeded. As you did previously with the example file, click on “View Pipeline” at the top right. Then open the job and observe the output. In green, notice each bash command executed successfully.
 
 ![alt text](img/gitlab2cde_14.png)
 
@@ -168,15 +168,15 @@ Finally, confirm the CDE Resource has been successfully created. Navigate back t
 
 ![alt text](img/gitlab2cde_15.png)
 
-On the left pane, click on “Resources” and validate that “gitlab2cde_resource_test” has been created. 
+On the left pane, click on “Resources” and validate that “gitlab2cde_resource_test” has been created.
 
 ![alt text](img/gitlab2cde_16.png)
 
 ##### Creating and Executing and End to End Pipeline
 
-Now that we have covered the basics, we will build a basic pipeline. Before we can proceed, we need to upload our Spark Job to the GitLab Project folder. 
+Now that we have covered the basics, we will build a basic pipeline. Before we can proceed, we need to upload our Spark Job to the GitLab Project folder.
 
-Create a new folder in the main project folder as shown below. 
+Create a new folder in the main project folder as shown below.
 
 ![alt text](img/gitlab2cde_17.png)
 
@@ -201,7 +201,7 @@ Now navigate back to the “Editor” from the “CI/CD” tab. Replace the cont
 ```
 stages:          # List of stages for jobs, and their order of execution
  - deploy
- 
+
 create_cde_job:
  stage: deploy
  image: docker:stable
@@ -221,7 +221,7 @@ create_cde_job:
      \"mounts\": [ { \"dirPrefix\": \"/\", \"resourceName\": \"gitlab2cde_resource\" } ],
      \"spark\": { \"file\": \"SimpleSparkJob.py\", \"conf\": { \"spark.pyspark.python\": \"python3\" } },
      \"schedule\": { \"enabled\": false} }"'
- 
+
 run_cde_job:
  stage: deploy
  image: docker:stable
@@ -232,7 +232,7 @@ run_cde_job:
    - 'CDE_TOKEN=$(curl -u "${CDE_CREDENTIALS}" "${CDE_SVC_URL}/gateway/authtkn/knoxtoken/api/v1/token" | jq -r ".access_token")'
    - 'curl -H "Authorization: Bearer ${CDE_TOKEN}" -X POST "${CDE_JOB_URL}/jobs/gitlab2cde_job/run"'
    - 'curl -H "Authorization: Bearer ${CDE_TOKEN}" -X GET "${CDE_JOB_URL}/job-runs?filter=job%5Beq%gitlab2cde_job&limit=20&offset=0&orderby=ID&orderasc=true" | jq .'
- 
+
 monitor_cde_job:
  stage: deploy
  image: docker:stable
@@ -257,15 +257,15 @@ In summary, the new script is doing the following:
 * In “run_cde_job” we run the CDE Job and send a request to list runs
 * In “monitor_cde_job” we parse the output Json from the same request and load the CDE Job logs into a GitLab CI Artifact.  
 
-For now, commit the changes and let the three GitLab CI Jobs run. Explore each GitLab CI Job output and familiarize yourself with the workflow. 
+For now, commit the changes and let the three GitLab CI Jobs run. Explore each GitLab CI Job output and familiarize yourself with the workflow.
 
-Navigate to the CDE Virtual Cluster’s Jobs page and validate the new CDE Resource and Job execution. 
+Navigate to the CDE Virtual Cluster’s Jobs page and validate the new CDE Resource and Job execution.
 
 ![alt text](img/gitlab2cde_22.png)
 
 ![alt text](img/gitlab2cde_23.png)
 
-Notice the CDE Job might still be running. When it completes, click on the latest Run ID and use the CDE UI to explore the logs. 
+Notice the CDE Job might still be running. When it completes, click on the latest Run ID and use the CDE UI to explore the logs.
 
 ![alt text](img/gitlab2cde_24.png)
 
@@ -273,17 +273,17 @@ Now navigate back to the GitLab CI, open “Jobs” under “CI/CD”, then open
 
 ![alt text](img/gitlab2cde_25.png)
 
-Notice the same error trace you saw in the CDE Job logs. On the right side, click on the “Browse” icon of the “Artifacts” section. 
+Notice the same error trace you saw in the CDE Job logs. On the right side, click on the “Browse” icon of the “Artifacts” section.
 
 ![alt text](img/gitlab2cde_26.png)
 
-Notice a folder has been created. Open it and GitLab will download the logs for you. 
+Notice a folder has been created. Open it and GitLab will download the logs for you.
 
 ![alt text](img/gitlab2cde_27.png)
 
 ![alt text](img/gitlab2cde_28.png)
 
-Open the file on your local desktop and notice that once again its contents are the same as the logs you found in CDE and the GitLab CI Job output. 
+Open the file on your local desktop and notice that once again its contents are the same as the logs you found in CDE and the GitLab CI Job output.
 
 An Artifact allows you to temporarily store and reuse files created as part of GitLab CI Job execution. It will become more important in the next sections.
 
@@ -315,7 +315,7 @@ Then scroll down and click on the “execute” blue button
 
 Observe the CURL command being built for you and notice specifically the latter part of the URL. This is exactly how we built one of our commands in the GitLab CI editor. Can you remember which one?
 
-Finally, also notice that the response is populated for you. This is a great way to test your requests and learn the API at the same time. 
+Finally, also notice that the response is populated for you. This is a great way to test your requests and learn the API at the same time.
 
 ![alt text](img/gitlab2cde_35.png)
 
@@ -324,15 +324,7 @@ Finally, also notice that the response is populated for you. This is a great way
 
 This tutorial demonstrated how to execute Spark pipelines across different CDE Virtual Clusters. This also opens up possibilities for complex workflows
 
-* You can deploy resilient pipelines within Virtual Clusters that closely reflect the needs of each. Each Virtual Cluster may sit in a different Cloud. AWS, Azure, and even Private Cloud with OCP and Cloudera ECS. 
+* You can deploy resilient pipelines within Virtual Clusters that closely reflect the needs of each. Each Virtual Cluster may sit in a different Cloud. AWS, Azure, and even Private Cloud with OCP and Cloudera ECS.
 * You can isolate and secure datasets in different datalakes while managing and monitoring a unified pipelines with unified tooling i.e. the CDP Control Plane, Workload Manager, and of course GitLab CI
 * You can now create workflows encompassing different Spark versions, for example to test Spark upgrades across multiple Spark versions
-* You can move your workloads to better purpose driven CDE Virtual Clusters, for example dedicating one for data profiling and testing with Great Expectations, or Machine Learning with Spark ML, or even Spark Job tuning and more. 
-
-
-
-
-
-
-
-
+* You can move your workloads to better purpose driven CDE Virtual Clusters, for example dedicating one for data profiling and testing with Great Expectations, or Machine Learning with Spark ML, or even Spark Job tuning and more.
